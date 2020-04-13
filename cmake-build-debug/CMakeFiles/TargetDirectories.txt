@@ -1,3 +1,0 @@
-/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/CMakeFiles/Exercise.dir
-/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/CMakeFiles/edit_cache.dir
