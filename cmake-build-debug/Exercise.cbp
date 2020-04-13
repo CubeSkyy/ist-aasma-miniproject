@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Exercise"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Exercise">
+				<Option output="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Exercise.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/."/>
+					<Add directory="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include/c++"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include/c++/x86_64-pc-cygwin"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include/c++/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../lib/../include/w32api"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 Exercise"/>
+					<CompileFile command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Exercise/fast">
+				<Option output="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Exercise.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/."/>
+					<Add directory="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include/c++"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include/c++/x86_64-pc-cygwin"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include/c++/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/9.3.0/../../../../lib/../include/w32api"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 Exercise/fast"/>
+					<CompileFile command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make.exe -j4 -f &quot;/cygdrive/c/Users/CubeSky/OneDrive\ -\ Universidade\ de\ Lisboa/Projectos/AASMA/Exercise/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/Agent.cpp">
+			<Option target="Exercise"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/Agent.h">
+			<Option target="Exercise"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/Makefile">
+			<Option target="Exercise"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/RationaleAgent.cpp">
+			<Option target="Exercise"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/RationaleAgent.h">
+			<Option target="Exercise"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/exercise.cpp">
+			<Option target="Exercise"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

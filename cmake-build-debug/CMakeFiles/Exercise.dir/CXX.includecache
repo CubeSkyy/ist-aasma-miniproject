@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/Agent.cpp
+Agent.h
+/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/Agent.h
+iostream
+-
+limits.h
+-
+math.h
+-
+iomanip
+-
+
+/cygdrive/c/Users/CubeSky/OneDrive - Universidade de Lisboa/Projectos/AASMA/Exercise/src/Agent.h
+string
+-
+vector
+-
+map
+-
+queue
+-
+
