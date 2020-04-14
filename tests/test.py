@@ -3,7 +3,6 @@ import os
 import subprocess
 from shutil import copyfile
 
-
 url = 'C:\\Users\\CubeSky\\OneDrive - Universidade de Lisboa\\Projectos\\AASMA\\Exercise\\cmake-build-debug\\Exercise.exe'
 tests = 0
 failed = 0
@@ -13,11 +12,11 @@ for path in Path('').rglob('*.txt'):
         testName = path.parent.name + "/" + path.name
         f = open(path, 'r')
         outfile = open('out', "w")
-        subprocess.run(url, input="\n".join(f.readlines()), text=True, stdout=outfile)
+        subprocess.run(url, input=f.read(), text=True, stdout=outfile)
         outfile.close()
         target = open(path.parent.name + "/" + path.name.replace("_input.txt", "")+"_output.txt" , 'r')
         outfile = open("out", 'r')
-        if target.readlines() != outfile.readlines():
+        if target.read().splitlines() != outfile.read().splitlines():
             print("Failed test: " + testName)
             myout = open("My" + path.parent.name + "/" + path.name.replace("_input.txt", "")+"_output.txt", 'w+')
             myout.close()
@@ -27,5 +26,5 @@ for path in Path('').rglob('*.txt'):
             print("Passed test: " + testName)
 
         outfile.close()
-
+        os.remove("out")
 print("\nFailed "+ str(failed) + " of " + str(tests) + " tests.")

@@ -4,6 +4,7 @@
 #include <iostream>
 #include "RationaleAgent.h"
 #include <float.h>
+#include <limits.h>
 
 RationaleAgent::RationaleAgent(string options) : Agent(options) {}
 
@@ -18,39 +19,42 @@ void RationaleAgent::decideAndAct() {
 }
 
 string RationaleAgent::decide() {
-    if (perceivedUtility.empty()) {
+    if (taskHashMap.empty()) {
         cout << "Decide failed: No perceivedUtility were given.";
         return nullptr;
     }
 
-    pair<string, double> max_pair = pair<string, double> ("null", FLT_MIN);
-    for (auto it = begin(perceivedUtility); it != end(perceivedUtility); ++it) {
-        pair<string, double> element = *it;
-        if (element.second > max_pair.second) {
-            max_pair = element;
+    Task max = Task("NULL");
+    double maxUtil = (double) INT_MIN;
+    double currMaxUtil;
+    for (auto it = begin(taskHashMap); it != end(taskHashMap); ++it) {
+        pair<string,Task> element = *it;
+        currMaxUtil = getFullUtility(element.first);
+        if (currMaxUtil > maxUtil) {
+            max = element.second;
+            maxUtil = currMaxUtil;
         }
     }
+    taskHashMap[max.getName()].setStepSeen(taskHashMap[max.getName()].getStepSeen() + 1);
 
-    taskQueue.push(max_pair.first);
-    return max_pair.first;
+    if(getCurrentTask() != NULL && getCurrentTask()->getName() != max.getName())
+        taskHashMap[getCurrentTask()->getName()].setStepSeen(1);
+    setCurrentTask(&taskHashMap[max.getName()]);
+    return max.getName();
 }
 
 
 void RationaleAgent::act(int value) {
-    string task = taskQueue.front();
-    taskQueue.pop();
-
-    double weight = getMemoryWeight();
-    auto it = perceivedUtility.find(task);
-    it->second = it->second * (1 - weight) + value * weight;
-
-    it = realUtility.find(task);
-    if (it != realUtility.end())
-        it->second = it->second * (1 - weight) + value * weight;
-    else
-        realUtility.insert(pair<string, double>(task, (double) value));
-
-    gain += value;
+    Task* task = getCurrentTask();
+    task->setTimesSeen(task->getTimesSeen() + 1);
+    double weight = getMemoryWeight(task->getName());
+    if(!task->isRealSeen()){
+        task->setPerceivedUtility((double) value);
+    }else
+        task->setPerceivedUtility(task->getPerceivedUtility() * (1 - weight) + value * weight);
+    task->setStepSeen(task->getStepSeen() - 1);
+    task->setRealSeen(true);
+    setGain(getGain() + value);
 }
 
 

@@ -5,7 +5,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    freopen("../tests/statement/T03_input.txt","r",stdin);
+//    freopen("../tests/public/T03_input.txt","r",stdin);
 
 	string input_line;
 	getline(cin, input_line);
