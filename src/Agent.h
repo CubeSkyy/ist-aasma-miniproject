@@ -21,9 +21,9 @@ public:
 
     void setGain(double gain);
 
-    int getCurrStep() const;
+    virtual int getCurrStep() const;
 
-    void setCurrStep(int currStep);
+    virtual void setCurrStep(int currStep);
 
     float getMemoryFactor() const;
 
@@ -31,7 +31,7 @@ public:
 
     explicit Agent(string);
 
-    void perceive(string);
+    virtual void perceive(string);
 
     void virtual decideAndAct();
 
@@ -39,21 +39,21 @@ public:
 
     void virtual act(int) = 0;
 
-    string recharge();
+    virtual string recharge() = 0;
 
     vector<string> splitString(string, string delimiter = " ");
 
-    void start();
+    virtual void start() = 0;
 
     double getMemoryWeight(string);
 
-    string truncateFloatPoint(double number, int precision);
+    static string truncateFloatPoint(double number, int precision);
 
-    Task *getTask(string);
+    virtual Task *getTask(string);
 
-    Task *getCurrentTask();
+    virtual Task *getCurrentTask();
 
-    void setCurrentTask(Task *currentTask);
+    virtual void setCurrentTask(Task *currentTask);
 
     int getRestart() const;
 
@@ -61,6 +61,9 @@ public:
 
     double getFullUtility(string taskName);
 
+    virtual map<string, Task>* getTaskHashMap();
+
+//    double getMemoryTest(string _task);
 private:
     int restart;
     int steps;
@@ -68,6 +71,7 @@ private:
     int currStep;
     float memoryFactor = 0;
     Task *currentTask;
+
 
 };
 

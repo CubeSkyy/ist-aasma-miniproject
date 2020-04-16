@@ -13,7 +13,10 @@ public:
     void virtual decideAndAct();
     virtual string decide();
     void virtual act(int);
-
+    virtual void start();
+    virtual string recharge();
+    virtual map<string, Task>* getTaskHashMap();
+    bool multiAgentFlag;
 };
 
 

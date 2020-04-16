@@ -1,15 +1,10 @@
-//
-// Created by CubeSky on 4/14/2020.
-//
-
 #include "Task.h"
 
 #include <utility>
 
 Task::Task(string name) : name(std::move(name)) {
     realSeen = false;
-    timesSeen = 0;
-    stepSeen = 1;
+    waitTime = 0;
 }
 
 double Task::getPerceivedUtility() const {
@@ -20,14 +15,6 @@ void Task::setPerceivedUtility(double _perceivedUtility) {
     Task::perceivedUtility = _perceivedUtility;
 }
 
-int Task::getTimesSeen() const {
-    return timesSeen;
-}
-
-void Task::setTimesSeen(int _timesSeen) {
-    Task::timesSeen = _timesSeen;
-}
-
 bool Task::isRealSeen() const {
     return realSeen;
 }
@@ -36,12 +23,12 @@ void Task::setRealSeen(bool _realSeen) {
     Task::realSeen = _realSeen;
 }
 
-int Task::getStepSeen() const {
-    return stepSeen;
+int Task::getWaitTime() const {
+    return waitTime;
 }
 
-void Task::setStepSeen(int _stepSeen) {
-    Task::stepSeen = _stepSeen;
+void Task::setWaitTime(int _waitTime) {
+    Task::waitTime = _waitTime;
 }
 
 const string &Task::getName() const {
@@ -49,4 +36,5 @@ const string &Task::getName() const {
 }
 
 Task::Task() {}
+
 

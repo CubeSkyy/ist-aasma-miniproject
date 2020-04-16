@@ -8,11 +8,10 @@
 Agent::Agent(string options) {
     setGain(0);
     setCurrStep(0   );
-    vector<string> o = splitString(options);
     setCurrentTask(NULL);
 
-    for (auto it = begin(o); it != end(o); ++it) {
-        string element = *it;
+    vector<string> o = splitString(options);
+    for (const string& element : o) {
         string option = element.substr(0, element.find('='));
         string value = element.substr(element.find('=') + 1, element.size());
         if (option == "cycle")
@@ -44,53 +43,31 @@ void Agent::perceive(string input) {
     int value = stoi(utility.substr(utility.find("=") + 1, utility.size()));
     Task* task = getTask(taskName);
     task->setPerceivedUtility(value);
-
-
 }
 
 void Agent::decideAndAct() {
 //    cout << "act" << endl;
 }
 
-string Agent::recharge() {
-    string result = "state={";
-    for (auto it = begin(taskHashMap); it != end(taskHashMap); ++it) {
-        Task element = it->second;
-        if (!element.isRealSeen())
-            result += element.getName() + "=NA,";
-        else
-            result += element.getName() + "=" + truncateFloatPoint(element.getPerceivedUtility(), 2) + ",";
-
-    }
-    result.erase(result.size() - 1);
-    result += "} gain=";
-    result += truncateFloatPoint(getGain(), 2);
-    return result;
-}
-
-
-void Agent::start() {
-    string input;
-    getline(cin, input);
-    while (input.rfind("end", 0) != 0) {
-        if (input.rfind("TIK", 0) == 0) {
-            currStep++;
-            decide();
-        } else if (input.rfind("A u=", 0) == 0) act(stoi(input.substr(input.find('=') + 1, input.size())));
-        else perceive(input);
-        getline(cin, input);
-    }
-
-    cout << recharge();
-}
-
 double Agent::getMemoryWeight(string task) {
     double sum = 0;
-    int visited = getTask(task)->getTimesSeen();
-    for (int i = 1; i <= visited; i++)
+    for (int i: getTask(task)->stepSeen)
         sum += pow(i, memoryFactor);
-    return pow(visited, memoryFactor) / sum;
+    return pow(getCurrStep(), memoryFactor) / sum;
 }
+
+
+//double Agent::getMemoryTest(string _task){
+//    Task* task = getTask(_task);
+//    double sum = 0;
+//    for (int i: task->stepSeen)
+//        sum += pow(i, memoryFactor);
+//    double util = 0;
+//    for (int i=0; i< task->stepSeen.size(); i++){
+//        util += task->utilitySeen[i]* (pow(task->stepSeen[i], memoryFactor)/sum);
+//    }
+//    return util;
+//}
 
 string Agent::truncateFloatPoint(double n, int _precision) {
     string number = to_string(round(n*100)/100);
@@ -133,9 +110,10 @@ void Agent::setMemoryFactor(float memoryFactor) {
 
 
 Task* Agent::getTask(string task) {
-    if(!taskHashMap.count(task))
-        taskHashMap[task] = Task(task);
-    return &taskHashMap[task];
+    map<string, Task>* _taskHashMap = getTaskHashMap();
+    if(!_taskHashMap->count(task))
+        _taskHashMap->emplace(task, Task(task));
+    return &_taskHashMap->at(task);
 }
 
 Task* Agent::getCurrentTask() {
@@ -156,5 +134,9 @@ void Agent::setRestart(int restart) {
 
 double Agent::getFullUtility(string taskName) {
     Task* task = getTask(taskName);
-    return task->getPerceivedUtility() * ((getSteps() - getCurrStep()) - getRestart() + task->getStepSeen());
+    return task->getPerceivedUtility() * ((getSteps() - getCurrStep()) - getRestart() + task->getWaitTime());
+}
+
+ map<string, Task> *Agent::getTaskHashMap() {
+    return &taskHashMap;
 }
