@@ -1,2 +1,2 @@
 all:
-	g++ -O -o exercise *.cpp
+	g++ -O -o exercise *.cpp -lquadmath

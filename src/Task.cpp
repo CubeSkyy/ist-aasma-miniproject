@@ -7,13 +7,6 @@ Task::Task(string name) : name(std::move(name)) {
     waitTime = 0;
 }
 
-double Task::getPerceivedUtility() const {
-    return perceivedUtility;
-}
-
-void Task::setPerceivedUtility(double _perceivedUtility) {
-    Task::perceivedUtility = _perceivedUtility;
-}
 
 bool Task::isRealSeen() const {
     return realSeen;

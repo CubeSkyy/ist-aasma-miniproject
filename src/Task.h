@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <quadmath.h>
 
 using namespace std;
 
@@ -11,11 +12,7 @@ public:
     Task(string name);
 
     Task();
-
-    double getPerceivedUtility() const;
-
-    void setPerceivedUtility(double perceivedUtility);
-
+    __float128 perceivedUtility;
     bool isRealSeen() const;
 
     void setRealSeen(bool realSeen);
@@ -29,7 +26,6 @@ public:
     vector<int> stepSeen;
 
 private:
-    double perceivedUtility;
     bool realSeen;
     int waitTime;
     string name;

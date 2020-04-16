@@ -39,7 +39,7 @@ string homogeneousRecharge(vector<string> agents, map<string, Task> taskHashMap,
             if (!task.isRealSeen())
                 result += taskName + "=NA,";
             else
-                result += taskName + "=" + Agent::truncateFloatPoint(task.getPerceivedUtility(), 2) + ",";
+                result += taskName + "=" + Agent::getfloat128String(task.perceivedUtility) + ",";
 
         }
         result.erase(result.size() - 1);
@@ -64,7 +64,7 @@ string heterogeneousRecharge(map<string, RationaleAgent *> agents) {
             if (!task.isRealSeen())
                 result += taskName + "=NA,";
             else
-                result += taskName + "=" + Agent::truncateFloatPoint(task.getPerceivedUtility(), 2) + ",";
+                result += taskName + "=" + Agent::getfloat128String(task.perceivedUtility) + ",";
 
         }
         gain += agent->getGain();
@@ -108,52 +108,52 @@ int main(int argc, char *argv[]) {
 //            if (agents.at("A1")->getTaskHashMap()->find("T0") == agents.at("A1")->getTaskHashMap()->end()) {
 //                A1T0 = -1000000000;
 //            } else {
-//                A1T0 = agents.at("A1")->getTaskHashMap()->at("T0").getPerceivedUtility();
+//                A1T0 = agents.at("A1")->getTaskHashMap()->at("T0").perceivedUtility;
 //            }
 //            if (agents.at("A1")->getTaskHashMap()->find("T1") == agents.at("A1")->getTaskHashMap()->end()) {
 //                A1T1 = -1000000000;
 //            } else {
-//                A1T1 = agents.at("A1")->getTaskHashMap()->at("T1").getPerceivedUtility();
+//                A1T1 = agents.at("A1")->getTaskHashMap()->at("T1").perceivedUtility;
 //            }
 //            if (agents.at("A1")->getTaskHashMap()->find("T2") == agents.at("A1")->getTaskHashMap()->end()) {
 //                A1T2 = -1000000000;
 //            } else {
-//                A1T2 = agents.at("A1")->getTaskHashMap()->at("T2").getPerceivedUtility();
+//                A1T2 = agents.at("A1")->getTaskHashMap()->at("T2").perceivedUtility;
 //            }
 //            if (agents.at("A1")->getTaskHashMap()->find("T3") == agents.at("A1")->getTaskHashMap()->end()) {
 //                A1T3 = -1000000000;
 //            } else {
-//                A1T3 = agents.at("A1")->getTaskHashMap()->at("T3").getPerceivedUtility();
+//                A1T3 = agents.at("A1")->getTaskHashMap()->at("T3").perceivedUtility;
 //            }
 //            if (agents.at("A1")->getTaskHashMap()->find("T4") == agents.at("A1")->getTaskHashMap()->end()) {
 //                A1T4 = -1000000000;
 //            } else {
-//                A1T4 = agents.at("A1")->getTaskHashMap()->at("T4").getPerceivedUtility();
+//                A1T4 = agents.at("A1")->getTaskHashMap()->at("T4").perceivedUtility;
 //            }
 //            if (agents.at("A2")->getTaskHashMap()->find("T0") == agents.at("A2")->getTaskHashMap()->end()) {
 //                A2T0 = -1000000000;
 //            } else {
-//                A2T0 = agents.at("A2")->getTaskHashMap()->at("T0").getPerceivedUtility();
+//                A2T0 = agents.at("A2")->getTaskHashMap()->at("T0").perceivedUtility;
 //            }
 //            if (agents.at("A2")->getTaskHashMap()->find("T1") == agents.at("A2")->getTaskHashMap()->end()) {
 //                A2T1 = -1000000000;
 //            } else {
-//                A2T1 = agents.at("A2")->getTaskHashMap()->at("T1").getPerceivedUtility();
+//                A2T1 = agents.at("A2")->getTaskHashMap()->at("T1").perceivedUtility;
 //            }
 //            if (agents.at("A2")->getTaskHashMap()->find("T2") == agents.at("A2")->getTaskHashMap()->end()) {
 //                A2T2 = -1000000000;
 //            } else {
-//                A2T2 = agents.at("A2")->getTaskHashMap()->at("T2").getPerceivedUtility();
+//                A2T2 = agents.at("A2")->getTaskHashMap()->at("T2").perceivedUtility;
 //            }
 //            if (agents.at("A2")->getTaskHashMap()->find("T3") == agents.at("A2")->getTaskHashMap()->end()) {
 //                A2T3 = -1000000000;
 //            } else {
-//                A2T3 = agents.at("A2")->getTaskHashMap()->at("T3").getPerceivedUtility();
+//                A2T3 = agents.at("A2")->getTaskHashMap()->at("T3").perceivedUtility;
 //            }
 //            if (agents.at("A2")->getTaskHashMap()->find("T4") == agents.at("A2")->getTaskHashMap()->end()) {
 //                A2T4 = -1000000000;
 //            } else {
-//                A2T4 = agents.at("A2")->getTaskHashMap()->at("T4").getPerceivedUtility();
+//                A2T4 = agents.at("A2")->getTaskHashMap()->at("T4").perceivedUtility;
 //            }
 //            if (agents.at("A1")->getCurrentTask() == NULL){
 //                task1 = "null";

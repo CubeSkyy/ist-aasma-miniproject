@@ -5,6 +5,7 @@
 #include "Task.h"
 #include <map>
 #include <vector>
+#include <quadmath.h>
 
 using namespace std;
 
@@ -45,7 +46,7 @@ public:
 
     virtual void start() = 0;
 
-    double getMemoryWeight(string);
+    __float128 getMemoryWeight(string);
 
     static string truncateFloatPoint(double number, int precision);
 
@@ -63,7 +64,7 @@ public:
 
     virtual map<string, Task>* getTaskHashMap();
 
-//    double getMemoryTest(string _task);
+    static string getfloat128String(__float128 input);
 private:
     int restart;
     int steps;
@@ -71,7 +72,6 @@ private:
     int currStep;
     float memoryFactor = 0;
     Task *currentTask;
-
 
 };
 

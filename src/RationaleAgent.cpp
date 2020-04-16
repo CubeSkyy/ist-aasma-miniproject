@@ -51,11 +51,15 @@ void RationaleAgent::act(int value) {
     Task* task = getCurrentTask();
     task->stepSeen.push_back(getCurrStep());
 //    task->utilitySeen.push_back(value);
-    double weight = getMemoryWeight(task->getName());
+    __float128 weight = getMemoryWeight(task->getName());
+    __float128 one = strtoflt128 ("1.0", NULL);
+    __float128 result;
+    __float128 _value = strtoflt128 (to_string(value).c_str(), NULL);
     if(!task->isRealSeen()){
-        task->setPerceivedUtility((double) value);
+        task->perceivedUtility = _value;
     }else{
-        task->setPerceivedUtility(task->getPerceivedUtility() * (1 - weight) + value * weight);
+        result = task->perceivedUtility * (one - weight) + _value * weight;
+        task->perceivedUtility = result;
     }
 
     task->setRealSeen(true);
@@ -84,7 +88,7 @@ string RationaleAgent::recharge() {
         if (!task.isRealSeen())
             result += taskName + "=NA,";
         else
-            result += taskName + "=" + truncateFloatPoint(task.getPerceivedUtility(), 2) + ",";
+            result += taskName + "=" + Agent::getfloat128String(task.perceivedUtility) + ",";
 
     }
     result.erase(result.size() - 1);
