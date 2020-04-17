@@ -2,11 +2,18 @@
 #include <string>
 #include "Agent.h"
 #include "RationaleAgent.h"
+#include "HomogeneousAgent.h"
+#include <algorithm>
+#include <cmath>
+#include "AllPermutation.h"
 
 using namespace std;
 
-string getDecision(string input) {
-    string decision = input.substr(input.find("decision=") + 9);
+string getOption(string input, string option) {
+    if (input.find(option + "=") == std::string::npos) {
+        return "NULL";
+    }
+    string decision = input.substr(input.find(option + "=") + option.size() + 1);
     decision = decision.substr(0, decision.find(' '));
     return decision;
 }
@@ -29,45 +36,22 @@ vector<string> getAgentsNames(string input) {
     return result;
 }
 
-string homogeneousRecharge(vector<string> agents, map<string, Task> taskHashMap, double gain) {
-    string result = "state={";
-    for (string agent : agents) {
-        result += agent + "={";
-        for (const auto &kv : taskHashMap) {
-            string taskName = kv.first;
-            Task task = kv.second;
-            if (!task.isRealSeen())
-                result += taskName + "=NA,";
-            else
-                result += taskName + "=" + Agent::getfloat128String(task.perceivedUtility) + ",";
-
-        }
-        result.erase(result.size() - 1);
-        result += "},";
-    }
-    result.erase(result.size() - 1);
-    result += "} gain=";
-    result += Agent::truncateFloatPoint(gain, 2);
-    result += "\n";
-    return result;
-}
-
-string heterogeneousRecharge(map<string, RationaleAgent *> agents) {
+string societyResult(map<string, Agent *> agents) {
     string result = "state={";
     double gain = 0;
     for (const auto &kv2 : agents) {
-        RationaleAgent *agent = kv2.second;
+        Agent *agent = kv2.second;
         result += kv2.first + "={";
         for (const auto &kv : *agent->getTaskHashMap()) {
             string taskName = kv.first;
             Task task = kv.second;
-            if (!task.isRealSeen())
+            if (!task.realSeen)
                 result += taskName + "=NA,";
             else
                 result += taskName + "=" + Agent::getfloat128String(task.perceivedUtility) + ",";
 
         }
-        gain += agent->getGain();
+        gain += agent->gain;
         result.erase(result.size() - 1);
         result += "},";
     }
@@ -79,115 +63,199 @@ string heterogeneousRecharge(map<string, RationaleAgent *> agents) {
 }
 
 
+// C++ implementation
+#include <bits/stdc++.h>
+
+
+vector<vector<Task>> findPermutations(map<string, Task> *taskMap, int n_agents) {
+    Task tasks[taskMap->size()];
+    int i = 0;
+    for (auto &it : *taskMap) {
+        tasks[i++] = it.second;
+    }
+    int len = sizeof(tasks) / sizeof(tasks[0]);
+    int L = n_agents;
+
+    int size = (int) pow(len, L);
+    vector<vector<Task>> result(size, vector<Task>(L, Task()));
+
+    for (int i = 0; i < size; i++) {
+        vector<Task> res;
+        int k = i;
+        for (int j = 0; j < L; j++) {
+            res.push_back(tasks[k % len]);
+            k /= len;
+        }
+        result.at(i) = res;
+    }
+    return result;
+}
+
+
+vector<Task> getMaxCombination(vector<Agent *> agents) {
+    map<string, Task> *taskMap = agents.front()->getTaskHashMap();
+    vector<vector<Task>> result = findPermutations(taskMap, agents.size());
+    vector<Task> max;
+    double maxUtil = FLT_MIN;
+    for (vector<Task> comb : result) {
+        double util = 0;
+        for (int i = 0; i < comb.size(); i++) {
+            util += agents[i]->getFullUtility(comb[i].name);
+            Agent::tasksExecuting[comb[i].name]++;
+        }
+        if (util > maxUtil) {
+            max = comb;
+            maxUtil = util;
+        }
+        Agent::tasksExecuting.clear();
+
+    }
+    sort(max.begin(), max.end(), [](const Task &lhs, const Task &rhs) //TODO: Change to Task
+    {
+        return lhs.name < rhs.name;
+    });
+    return max;
+}
+
+
 int main(int argc, char *argv[]) {
-//    freopen("../tests/public/T15_input.txt", "r", stdin);
+    freopen("../tests/public/T18_input.txt", "r", stdin);
 
     string input;
     getline(cin, input);
-    string decision = getDecision(input);
+    string decision = getOption(input, "decision");
+    string _penalty = getOption(input, "concurrency-penalty");
+    int penalty;
+    if (_penalty == "NULL") {
+        penalty = 0;
+    } else {
+        penalty = stoi(_penalty);
+    }
     if (decision == "rationale") {
         RationaleAgent agent(input);
         agent.start();
         cout << agent.recharge();
     } else if (decision == "homogeneous-society") {
-        RationaleAgent agent(input);
-        agent.start();
-        cout << homogeneousRecharge(getAgentsNames(input), *agent.getTaskHashMap(), agent.getGain());
-    } else if (decision == "heterogeneous-society") {
-        vector<string> agentNameVector = getAgentsNames(input);
-        map<string, RationaleAgent *> agents;
-        for (string agent : agentNameVector) {
-            agents.insert(pair<string, RationaleAgent *>(agent, new RationaleAgent(input)));
-        }
-
-        getline(cin, input);
-        while (input.rfind("end", 0) != 0) {
-//            double A1T0, A1T1, A1T2, A1T3, A1T4, A2T0, A2T1, A2T2, A2T3, A2T4;
-//            int step1, step2;
-//            string task1, task2;
-//            if (agents.at("A1")->getTaskHashMap()->find("T0") == agents.at("A1")->getTaskHashMap()->end()) {
-//                A1T0 = -1000000000;
-//            } else {
-//                A1T0 = agents.at("A1")->getTaskHashMap()->at("T0").perceivedUtility;
-//            }
-//            if (agents.at("A1")->getTaskHashMap()->find("T1") == agents.at("A1")->getTaskHashMap()->end()) {
-//                A1T1 = -1000000000;
-//            } else {
-//                A1T1 = agents.at("A1")->getTaskHashMap()->at("T1").perceivedUtility;
-//            }
-//            if (agents.at("A1")->getTaskHashMap()->find("T2") == agents.at("A1")->getTaskHashMap()->end()) {
-//                A1T2 = -1000000000;
-//            } else {
-//                A1T2 = agents.at("A1")->getTaskHashMap()->at("T2").perceivedUtility;
-//            }
-//            if (agents.at("A1")->getTaskHashMap()->find("T3") == agents.at("A1")->getTaskHashMap()->end()) {
-//                A1T3 = -1000000000;
-//            } else {
-//                A1T3 = agents.at("A1")->getTaskHashMap()->at("T3").perceivedUtility;
-//            }
-//            if (agents.at("A1")->getTaskHashMap()->find("T4") == agents.at("A1")->getTaskHashMap()->end()) {
-//                A1T4 = -1000000000;
-//            } else {
-//                A1T4 = agents.at("A1")->getTaskHashMap()->at("T4").perceivedUtility;
-//            }
-//            if (agents.at("A2")->getTaskHashMap()->find("T0") == agents.at("A2")->getTaskHashMap()->end()) {
-//                A2T0 = -1000000000;
-//            } else {
-//                A2T0 = agents.at("A2")->getTaskHashMap()->at("T0").perceivedUtility;
-//            }
-//            if (agents.at("A2")->getTaskHashMap()->find("T1") == agents.at("A2")->getTaskHashMap()->end()) {
-//                A2T1 = -1000000000;
-//            } else {
-//                A2T1 = agents.at("A2")->getTaskHashMap()->at("T1").perceivedUtility;
-//            }
-//            if (agents.at("A2")->getTaskHashMap()->find("T2") == agents.at("A2")->getTaskHashMap()->end()) {
-//                A2T2 = -1000000000;
-//            } else {
-//                A2T2 = agents.at("A2")->getTaskHashMap()->at("T2").perceivedUtility;
-//            }
-//            if (agents.at("A2")->getTaskHashMap()->find("T3") == agents.at("A2")->getTaskHashMap()->end()) {
-//                A2T3 = -1000000000;
-//            } else {
-//                A2T3 = agents.at("A2")->getTaskHashMap()->at("T3").perceivedUtility;
-//            }
-//            if (agents.at("A2")->getTaskHashMap()->find("T4") == agents.at("A2")->getTaskHashMap()->end()) {
-//                A2T4 = -1000000000;
-//            } else {
-//                A2T4 = agents.at("A2")->getTaskHashMap()->at("T4").perceivedUtility;
-//            }
-//            if (agents.at("A1")->getCurrentTask() == NULL){
-//                task1 = "null";
-//            } else {
-//                task1 = agents.at("A1")->getCurrentTask()->getName();
-//            }
-//            if (agents.at("A2")->getCurrentTask() == NULL){
-//                task2 = "null";
-//            } else {
-//                task2 = agents.at("A2")->getCurrentTask()->getName();
-//            }
-//            step1 = agents.at("A1")->getCurrStep();
-//            step2 = agents.at("A2")->getCurrStep();
-
-            if (input.rfind("TIK", 0) == 0) {
-                for (const auto &kv : agents) {
-                    RationaleAgent *agent = kv.second;
-                    agent->decide();
-                    agent->setCurrStep(agent->getCurrStep() + 1);
-                }
-            } else if (input.rfind('A', 0) == 0) {
-                string agentName = input.substr(input.find('A'));
-                agentName = agentName.substr(0, agentName.find(' '));
-                agents.at(agentName)->act(stoi(input.substr(input.find('=') + 1, input.size())));
-            } else {
-                for (const auto &kv : agents) {
-                    RationaleAgent *agent = kv.second;
-                    agent->perceive(input);
-                }
+        if (penalty != 0) {
+            vector<string> agentNameVector = getAgentsNames(input);
+            vector<Agent *> agentVector;
+            map<string, Agent *> agents;
+            for (string agent : agentNameVector) {
+                Agent *a = new HomogeneousAgent(input);
+                agents.insert(pair<string, Agent *>(agent, a));
+                agentVector.push_back(a);
             }
+            Agent *randomAgent = agents.begin()->second;
             getline(cin, input);
+            vector<Task> maxComb;
+            while (input.rfind("end", 0) != 0) {
+                if (input.rfind("TIK", 0) == 0) {
+                    maxComb = getMaxCombination(agentVector);
+                } else if (input.rfind('A', 0) == 0) {
+                    string agentName = input.substr(input.find('A'));
+                    agentName = agentName.substr(0, agentName.find(' '));
+                    int index = distance(agentNameVector.begin(),
+                                         find(agentNameVector.begin(), agentNameVector.end(), agentName));
+                    agents.at(agentName)->act(maxComb[index].name,
+                                              stoi(input.substr(input.find('=') + 1, input.size())));
+                } else {
+                    randomAgent->perceive(input);
+                }
+                getline(cin, input);
+            }
+            cout << societyResult(agents);
+        } else {
+            vector<string> agentNameVector = getAgentsNames(input);
+            vector<Agent *> agentVector;
+            map<string, Agent *> agents;
+            for (string agent : agentNameVector) {
+                Agent *a = new HomogeneousAgent(input);
+                agents.insert(pair<string, Agent *>(agent, a));
+                agentVector.push_back(a);
+            }
+            Agent *randomAgent = agents.begin()->second;
+            getline(cin, input);
+            while (input.rfind("end", 0) != 0) {
+                if (input.rfind("TIK", 0) == 0) {
+                    for (const auto &kv : agents) {
+                        Agent *agent = kv.second;
+                        agent->decide();
+                        agent->currStep++;
+                    }
+                } else if (input.rfind('A', 0) == 0) {
+                    string agentName = input.substr(input.find('A'));
+                    agentName = agentName.substr(0, agentName.find(' '));
+                    agents.at(agentName)->act(stoi(input.substr(input.find('=') + 1, input.size())));
+                } else {
+                    randomAgent->perceive(input);
+                }
+                getline(cin, input);
+            }
+            cout << societyResult(agents);
         }
+    } else if (decision == "heterogeneous-society") {
+        if (penalty != 0) {
+            vector<string> agentNameVector = getAgentsNames(input);
+            vector<Agent *> agentVector;
+            map<string, Agent *> agents;
+            for (string agent : agentNameVector) {
+                Agent *a = new RationaleAgent(input);
+                agents.insert(pair<string, Agent *>(agent, a));
+                agentVector.push_back(a);
+            }
+            Agent *randomAgent = agents.begin()->second;
+            getline(cin, input);
+            vector<Task> maxComb;
+            while (input.rfind("end", 0) != 0) {
+                if (input.rfind("TIK", 0) == 0) {
+                    maxComb = getMaxCombination(agentVector);
+                } else if (input.rfind('A', 0) == 0) {
+                    string agentName = input.substr(input.find('A'));
+                    agentName = agentName.substr(0, agentName.find(' '));
+                    int index = distance(agentNameVector.begin(),
+                                         find(agentNameVector.begin(), agentNameVector.end(), agentName));
+                    agents.at(agentName)->act(maxComb[index].name,
+                                              stoi(input.substr(input.find('=') + 1, input.size())));
+                } else {
+                    for (const auto &kv : agents) {
+                        Agent *agent = kv.second;
+                        agent->perceive(input);
+                    }
+                }
+                getline(cin, input);
+            }
+            cout << societyResult(agents);
+        }else{
 
-        cout << heterogeneousRecharge(agents);
+            vector<string> agentNameVector = getAgentsNames(input);
+            map<string, Agent *> agents;
+            for (string agent : agentNameVector) {
+                agents.insert(pair<string, Agent *>(agent, new RationaleAgent(input)));
+            }
+
+            getline(cin, input);
+            while (input.rfind("end", 0) != 0) {
+                if (input.rfind("TIK", 0) == 0) {
+                    for (const auto &kv : agents) {
+                        Agent *agent = kv.second;
+                        agent->decide();
+                        agent->currStep++;
+                    }
+                } else if (input.rfind('A', 0) == 0) {
+                    string agentName = input.substr(input.find('A'));
+                    agentName = agentName.substr(0, agentName.find(' '));
+                    agents.at(agentName)->act(stoi(input.substr(input.find('=') + 1, input.size())));
+                } else {
+                    for (const auto &kv : agents) {
+                        Agent *agent = kv.second;
+                        agent->perceive(input);
+                    }
+                }
+                getline(cin, input);
+            }
+
+            cout << societyResult(agents);
+        }
     }
     return 0;
 }

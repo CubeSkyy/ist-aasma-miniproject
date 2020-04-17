@@ -6,9 +6,6 @@
 
 RationaleAgent::RationaleAgent(string options) : Agent(options) {}
 
-void RationaleAgent::decideAndAct() {
-
-}
 
 string RationaleAgent::decide() {
     map<string, Task>* _taskHashMap = getTaskHashMap();
@@ -25,7 +22,7 @@ string RationaleAgent::decide() {
         pair<string,Task> element = *it;
         currMaxUtil = getFullUtility(element.first);
         if(currMaxUtil == maxUtil){
-            if(stoi(element.first.substr(1)) < stoi(max.getName().substr(1))){
+            if(stoi(element.first.substr(1)) < stoi(max.name.substr(1))){
                     max = element.second;
                     maxUtil = currMaxUtil;
             }
@@ -35,36 +32,56 @@ string RationaleAgent::decide() {
         }
     }
 
-    if(getCurrentTask() != NULL && getCurrentTask()->getName() != max.getName()){
-        getCurrentTask()->setWaitTime(0);
+    if(currentTask != NULL && currentTask->name != max.name){
+        currentTask->waitTime = 0;
     }
-    setCurrentTask(&_taskHashMap->at(max.getName()));
-    if(getCurrentTask()->getWaitTime() < getRestart()){
-        getCurrentTask()->setWaitTime(getCurrentTask()->getWaitTime() + 1);
+    currentTask = &_taskHashMap->at(max.name);
+    if(currentTask->waitTime < restart){
+        currentTask->waitTime++;
     }
 
-    return max.getName();
+    return max.name;
 }
 
 
 void RationaleAgent::act(int value) {
-    Task* task = getCurrentTask();
-    task->stepSeen.push_back(getCurrStep());
+    Task* task = currentTask;
+    task->stepSeen.push_back(currStep);
 //    task->utilitySeen.push_back(value);
-    __float128 weight = getMemoryWeight(task->getName());
+    __float128 weight = getMemoryWeight(task->name);
     __float128 one = strtoflt128 ("1.0", NULL);
     __float128 result;
     __float128 _value = strtoflt128 (to_string(value).c_str(), NULL);
-    if(!task->isRealSeen()){
+    if(!task->realSeen){
         task->perceivedUtility = _value;
     }else{
         result = task->perceivedUtility * (one - weight) + _value * weight;
         task->perceivedUtility = result;
     }
 
-    task->setRealSeen(true);
-    setGain(getGain() + value);
+    task->realSeen = true;
+    gain += value;
 }
+
+void RationaleAgent::act(string taskName, int value) {
+    Task* task = getTask(taskName);
+
+    task->stepSeen.push_back(currStep);
+    __float128 weight = getMemoryWeight(task->name);
+    __float128 one = strtoflt128 ("1.0", NULL);
+    __float128 result;
+    __float128 _value = strtoflt128 (to_string(value).c_str(), NULL);
+    if(!task->realSeen){
+        task->perceivedUtility = _value;
+    }else{
+        result = task->perceivedUtility * (one - weight) + _value * weight;
+        task->perceivedUtility = result;
+    }
+
+    task->realSeen = true;
+    gain += _value;
+}
+
 
 void RationaleAgent::start() {
     string input;
@@ -73,7 +90,7 @@ void RationaleAgent::start() {
         if (input.rfind("TIK", 0) == 0) {
             multiAgentFlag = true;
             decide();
-            setCurrStep(getCurrStep() + 1);
+            currStep++;
         } else if (input.rfind('A', 0) == 0) act(stoi(input.substr(input.find('=') + 1, input.size())));
         else perceive(input);
         getline(cin, input);
@@ -85,7 +102,7 @@ string RationaleAgent::recharge() {
     for (const auto& kv : taskHashMap) {
         string taskName = kv.first;
         Task task = kv.second;
-        if (!task.isRealSeen())
+        if (!task.realSeen)
             result += taskName + "=NA,";
         else
             result += taskName + "=" + Agent::getfloat128String(task.perceivedUtility) + ",";
@@ -93,7 +110,7 @@ string RationaleAgent::recharge() {
     }
     result.erase(result.size() - 1);
     result += "} gain=";
-    result += truncateFloatPoint(getGain(), 2);
+    result += truncateFloatPoint(gain, 2);
     result += "\n";
     return result;
 }

@@ -4,22 +4,23 @@
 #include <math.h>
 #include <iomanip>
 
-
+map<string, int> Agent::tasksExecuting;
 Agent::Agent(string options) {
-    setGain(0);
-    setCurrStep(0);
-    setCurrentTask(NULL);
-
+    gain = 0;
+    currStep = 0;
+    currentTask = NULL;
     vector<string> o = splitString(options);
     for (const string &element : o) {
         string option = element.substr(0, element.find('='));
         string value = element.substr(element.find('=') + 1, element.size());
         if (option == "cycle")
-            setSteps(stoi(value));
+            steps =stoi(value);
         else if (option == "memory-factor")
-            setMemoryFactor(stof(value));
+            memoryFactor = stof(value);
         else if (option == "restart")
-            setRestart(stoi(value));
+            restart = stoi(value);
+        else if (option == "concurrentCost" || option == "concurrency-penalty")
+            concurPenalty = stoi(value);
     }
 }
 
@@ -42,22 +43,20 @@ void Agent::perceive(string input) {
     string utility = inputVector[1];
     int value = stoi(utility.substr(utility.find("=") + 1, utility.size()));
     Task *task = getTask(taskName);
+//    tasksExecuting[taskName] = 0;
     task->perceivedUtility = value;
 }
 
-void Agent::decideAndAct() {
-//    cout << "act" << endl;
-}
 
 __float128 Agent::getMemoryWeight(string task) {
     __float128 _i, _tmp, _result;
     __float128 _sum = strtoflt128 ("0.0", NULL);
-    __float128 _memFactor = strtoflt128 (to_string(getMemoryFactor()).c_str(), NULL);
+    __float128 _memFactor = strtoflt128 (to_string(memoryFactor).c_str(), NULL);
     for (int i: getTask(task)->stepSeen) {
         _i = strtoflt128 (to_string(i).c_str(), NULL);
         _sum += powq(_i, _memFactor);
     }
-    _tmp = powq(strtoflt128(to_string(getCurrStep()).c_str(), NULL), _memFactor);
+    _tmp = powq(strtoflt128(to_string(currStep).c_str(), NULL), _memFactor);
     _result = _tmp / _sum;
     return _result;
 }
@@ -86,39 +85,6 @@ string Agent::truncateFloatPoint(double n, int _precision) {
     return number;
 }
 
-int Agent::getSteps() const {
-    return steps;
-}
-
-void Agent::setSteps(int steps) {
-    Agent::steps = steps;
-}
-
-double Agent::getGain() const {
-    return gain;
-}
-
-void Agent::setGain(double gain) {
-    Agent::gain = gain;
-}
-
-int Agent::getCurrStep() const {
-    return currStep;
-}
-
-void Agent::setCurrStep(int currStep) {
-    Agent::currStep = currStep;
-}
-
-float Agent::getMemoryFactor() const {
-    return memoryFactor;
-}
-
-void Agent::setMemoryFactor(float memoryFactor) {
-    Agent::memoryFactor = memoryFactor;
-}
-
-
 Task *Agent::getTask(string task) {
     map<string, Task> *_taskHashMap = getTaskHashMap();
     if (!_taskHashMap->count(task))
@@ -126,25 +92,11 @@ Task *Agent::getTask(string task) {
     return &_taskHashMap->at(task);
 }
 
-Task *Agent::getCurrentTask() {
-    return currentTask;
-}
 
-void Agent::setCurrentTask(Task *currentTask) {
-    Agent::currentTask = currentTask;
-}
-
-int Agent::getRestart() const {
-    return restart;
-}
-
-void Agent::setRestart(int restart) {
-    Agent::restart = restart;
-}
-
-double Agent::getFullUtility(string taskName) {
+__float128 Agent::getFullUtility(string taskName) {
     Task *task = getTask(taskName);
-    return task->perceivedUtility * ((getSteps() - getCurrStep()) - getRestart() + task->getWaitTime());
+
+    return (task->perceivedUtility - (concurPenalty * Agent::tasksExecuting[taskName])) * ((steps - currStep) - restart + task->waitTime);
 }
 
 map<string, Task> *Agent::getTaskHashMap() {

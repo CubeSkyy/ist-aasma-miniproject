@@ -10,13 +10,14 @@ using namespace std;
 class RationaleAgent : public Agent {
 public:
     RationaleAgent(string options);
-    void virtual decideAndAct();
     virtual string decide();
     void virtual act(int);
     virtual void start();
     virtual string recharge();
     virtual map<string, Task>* getTaskHashMap();
     bool multiAgentFlag;
+
+    void act(string taskName, int);
 };
 
 
