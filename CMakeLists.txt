@@ -11,5 +11,5 @@ include_directories(src)
 add_executable(Exercise
         src/exercise.cpp
         src/Makefile src/Agent.cpp src/Agent.h src/RationaleAgent.cpp src/RationaleAgent.h src/Task.cpp src/Task.h
-        src/HomogeneousAgent.cpp src/HomogeneousAgent.h src/AllPermutation.cpp src/AllPermutation.h)
+        src/HomogeneousAgent.cpp src/HomogeneousAgent.h)
 target_link_libraries(Exercise quadmath)

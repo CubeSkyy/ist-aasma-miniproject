@@ -5,7 +5,6 @@
 #include "HomogeneousAgent.h"
 #include <algorithm>
 #include <cmath>
-#include "AllPermutation.h"
 
 using namespace std;
 
@@ -110,10 +109,10 @@ vector<Task> getMaxCombination(vector<Agent *> agents) {
         Agent::tasksExecuting.clear();
 
     }
-    sort(max.begin(), max.end(), [](const Task &lhs, const Task &rhs) //TODO: Change to Task
-    {
-        return lhs.name < rhs.name;
-    });
+//    sort(max.begin(), max.end(), [](const Task &lhs, const Task &rhs) //TODO: Change to Task
+//    {
+//        return lhs.name < rhs.name;
+//    });
     return max;
 }
 
@@ -209,6 +208,10 @@ int main(int argc, char *argv[]) {
             while (input.rfind("end", 0) != 0) {
                 if (input.rfind("TIK", 0) == 0) {
                     maxComb = getMaxCombination(agentVector);
+                    for (const auto &kv : agents) {
+                        Agent *agent = kv.second;
+                        agent->currStep++;
+                    }
                 } else if (input.rfind('A', 0) == 0) {
                     string agentName = input.substr(input.find('A'));
                     agentName = agentName.substr(0, agentName.find(' '));

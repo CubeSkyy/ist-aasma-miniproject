@@ -88,7 +88,6 @@ void RationaleAgent::start() {
     getline(cin, input);
     while (input.rfind("end", 0) != 0) {
         if (input.rfind("TIK", 0) == 0) {
-            multiAgentFlag = true;
             decide();
             currStep++;
         } else if (input.rfind('A', 0) == 0) act(stoi(input.substr(input.find('=') + 1, input.size())));

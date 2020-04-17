@@ -15,7 +15,6 @@ public:
     virtual void start();
     virtual string recharge();
     virtual map<string, Task>* getTaskHashMap();
-    bool multiAgentFlag;
 
     void act(string taskName, int);
 };
