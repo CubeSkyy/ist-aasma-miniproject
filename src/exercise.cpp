@@ -65,61 +65,76 @@ string societyResult(map<string, Agent *> agents) {
 // C++ implementation
 #include <bits/stdc++.h>
 
+int compareTaskVectors(vector<Task *> v1, vector<Task *> v2) {
+    int size = min(v1.size(), v2.size());
+    for (int i = 0; i < size; i++) {
+        if (v1[i]->name < v2[i]->name) {
+            return 1;
+        } else if (v1[i]->name > v2[i]->name) {
+            return 0;
+        }
+    }
+    return 0;
+}
 
-vector<vector<Task>> findPermutations(map<string, Task> *taskMap, int n_agents) {
-    Task tasks[taskMap->size()];
+vector<vector<Task *>> findPermutations(map<string, Task> *taskMap, int n_agents) {
+    Task *tasks[taskMap->size()];
     int i = 0;
     for (auto &it : *taskMap) {
-        tasks[i++] = it.second;
+        tasks[i++] = new Task(it.second);
     }
     int len = sizeof(tasks) / sizeof(tasks[0]);
     int L = n_agents;
 
     int size = (int) pow(len, L);
-    vector<vector<Task>> result(size, vector<Task>(L, Task()));
+    vector<vector<Task *>> result(size, vector<Task *>(L, new Task()));
 
-    for (int i = 0; i < size; i++) {
-        vector<Task> res;
-        int k = i;
+    for (int m = 0; m < size; m++) {
+        vector<Task *> res;
+        i = 0;
+        for (auto &it : *taskMap) {
+            tasks[i++] = new Task(it.second);
+        }
+        int k = m;
         for (int j = 0; j < L; j++) {
+            if (count(res.begin(), res.end(), tasks[k % len])) {
+                tasks[k % len]->concurrent = true;
+            }
             res.push_back(tasks[k % len]);
             k /= len;
         }
-        result.at(i) = res;
+        result.at(m) = res;
     }
     return result;
 }
 
 
-vector<Task> getMaxCombination(vector<Agent *> agents) {
+vector<Task *> getMaxCombination(vector<Agent *> agents) {
     map<string, Task> *taskMap = agents.front()->getTaskHashMap();
-    vector<vector<Task>> result = findPermutations(taskMap, agents.size());
-    vector<Task> max;
-    double maxUtil = FLT_MIN;
-    for (vector<Task> comb : result) {
-        double util = 0;
+    vector<vector<Task *>> result = findPermutations(taskMap, agents.size());
+    vector<Task *> max;
+    __float128 maxUtil = strtoflt128(to_string(INT_MIN).c_str(), NULL);
+    for (vector<Task *> comb : result) {
+        __float128 util = strtoflt128(to_string(0.0).c_str(), NULL);
         for (int i = 0; i < comb.size(); i++) {
-            util += agents[i]->getFullUtility(comb[i].name);
-            Agent::tasksExecuting[comb[i].name]++;
+            agents[i]->getTask(comb[i]->name)->concurrent = comb[i]->concurrent;
+            util += agents[i]->getFullUtility(comb[i]->name);
         }
-        if (util > maxUtil) {
+        if (util > maxUtil || (util == maxUtil && compareTaskVectors(comb, max))) {
             max = comb;
             maxUtil = util;
         }
-        Agent::tasksExecuting.clear();
-
+        for (int i = 0; i < comb.size(); i++) {
+            agents[i]->getTask(comb[i]->name)->concurrent = false;
+        }
     }
-//    sort(max.begin(), max.end(), [](const Task &lhs, const Task &rhs) //TODO: Change to Task
-//    {
-//        return lhs.name < rhs.name;
-//    });
+
     return max;
 }
 
 
 int main(int argc, char *argv[]) {
-    freopen("../tests/public/T18_input.txt", "r", stdin);
-
+    freopen("../tests/public/T01_input.txt", "r", stdin);
     string input;
     getline(cin, input);
     string decision = getOption(input, "decision");
@@ -146,7 +161,7 @@ int main(int argc, char *argv[]) {
             }
             Agent *randomAgent = agents.begin()->second;
             getline(cin, input);
-            vector<Task> maxComb;
+            vector<Task *> maxComb;
             while (input.rfind("end", 0) != 0) {
                 if (input.rfind("TIK", 0) == 0) {
                     maxComb = getMaxCombination(agentVector);
@@ -155,7 +170,7 @@ int main(int argc, char *argv[]) {
                     agentName = agentName.substr(0, agentName.find(' '));
                     int index = distance(agentNameVector.begin(),
                                          find(agentNameVector.begin(), agentNameVector.end(), agentName));
-                    agents.at(agentName)->act(maxComb[index].name,
+                    agents.at(agentName)->act(maxComb[index]->name,
                                               stoi(input.substr(input.find('=') + 1, input.size())));
                 } else {
                     randomAgent->perceive(input);
@@ -204,7 +219,7 @@ int main(int argc, char *argv[]) {
             }
             Agent *randomAgent = agents.begin()->second;
             getline(cin, input);
-            vector<Task> maxComb;
+            vector<Task *> maxComb;
             while (input.rfind("end", 0) != 0) {
                 if (input.rfind("TIK", 0) == 0) {
                     maxComb = getMaxCombination(agentVector);
@@ -217,7 +232,7 @@ int main(int argc, char *argv[]) {
                     agentName = agentName.substr(0, agentName.find(' '));
                     int index = distance(agentNameVector.begin(),
                                          find(agentNameVector.begin(), agentNameVector.end(), agentName));
-                    agents.at(agentName)->act(maxComb[index].name,
+                    agents.at(agentName)->act(maxComb[index]->name,
                                               stoi(input.substr(input.find('=') + 1, input.size())));
                 } else {
                     for (const auto &kv : agents) {
@@ -228,7 +243,7 @@ int main(int argc, char *argv[]) {
                 getline(cin, input);
             }
             cout << societyResult(agents);
-        }else{
+        } else {
 
             vector<string> agentNameVector = getAgentsNames(input);
             map<string, Agent *> agents;

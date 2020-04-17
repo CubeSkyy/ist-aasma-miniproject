@@ -8,11 +8,9 @@
 #include <quadmath.h>
 
 using namespace std;
-
 class Agent {
 
 public:
-    static map<string, int> tasksExecuting;
 
     map<string, Task> taskHashMap;
 

@@ -16,7 +16,11 @@ public:
     bool realSeen;
     int waitTime;
     string name;
-    int tasksExecuting;
+    bool concurrent;
+    bool operator== (const Task& task2) const
+    {
+        return name == task2.name;
+    }
 
 };
 

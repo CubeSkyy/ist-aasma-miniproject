@@ -7,9 +7,16 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(.)
 include_directories(src)
 
+add_executable(Exercise src/exercise.cpp
+        src/Agent.cpp
+        src/Agent.h
+        src/HomogeneousAgent.cpp
+        src/HomogeneousAgent.h
+        src/Makefile
+        src/RationaleAgent.cpp
+        src/RationaleAgent.h
+        src/Task.cpp
+        src/Task.h)
 
-add_executable(Exercise
-        src/exercise.cpp
-        src/Makefile src/Agent.cpp src/Agent.h src/RationaleAgent.cpp src/RationaleAgent.h src/Task.cpp src/Task.h
-        src/HomogeneousAgent.cpp src/HomogeneousAgent.h)
+        
 target_link_libraries(Exercise quadmath)

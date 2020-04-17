@@ -4,7 +4,6 @@
 #include <math.h>
 #include <iomanip>
 
-map<string, int> Agent::tasksExecuting;
 Agent::Agent(string options) {
     gain = 0;
     currStep = 0;
@@ -43,7 +42,6 @@ void Agent::perceive(string input) {
     string utility = inputVector[1];
     int value = stoi(utility.substr(utility.find("=") + 1, utility.size()));
     Task *task = getTask(taskName);
-//    tasksExecuting[taskName] = 0;
     task->perceivedUtility = value;
 }
 
@@ -95,8 +93,8 @@ Task *Agent::getTask(string task) {
 
 __float128 Agent::getFullUtility(string taskName) {
     Task *task = getTask(taskName);
-
-    return (task->perceivedUtility - (concurPenalty * Agent::tasksExecuting[taskName])) * ((steps - currStep) - restart + task->waitTime);
+    int concurrent = task->concurrent ? 1 : 0;
+    return (task->perceivedUtility - (concurPenalty * concurrent)) * ((steps - currStep) - restart + task->waitTime);
 }
 
 map<string, Task> *Agent::getTaskHashMap() {
